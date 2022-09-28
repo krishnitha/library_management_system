@@ -1,0 +1,399 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Library Management System"
+  },
+  "definations": {
+    "User": {
+      "properties": {
+        "username": {
+          "required": true,
+          "type": String
+        },
+        "name": {
+          "required": true,
+          "type": String
+        },
+        "email": {
+          "required": true,
+          "type": String
+        }
+      }
+    },
+    "Book_post": {
+      "properties": {
+        "name": {
+          "required": true,
+          "type": String
+        },
+        "author": {
+          "required": true,
+          "type": String
+        },
+        "publisher": {
+          "required": true,
+          "type": String
+        }
+      }
+    },
+    "Book": {
+      "properties": {
+        "id": {
+          "required": true,
+          "type": integer
+        },
+        "name": {
+          "required": true,
+          "type": String
+        },
+        "author": {
+          "required": true,
+          "type": String
+        },
+        "publisher": {
+          "required": true,
+          "type": String
+        }
+      }
+    },
+    "Library": {
+      "properties": {
+        "id": {
+          "required": true,
+          "type": integer
+        },
+        "book_id": {
+          "required": true,
+          "type": integer
+        },
+        "username": {
+          "required": true,
+          "type": String
+        }
+      }
+    },
+    "User_book": {
+      "properties": {
+        "username": {
+          "required": true,
+          "type": String
+        },
+        "name": {
+          "required": true,
+          "type": String
+        },
+        "email": {
+          "required": true,
+          "type": String
+        },
+        "books": {
+          "required": true,
+          "type": "object",
+          "items": {
+            "$ref": "#/definations/Book"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/users/": {
+      "get": {
+        "summary": "Get user list",
+        "tags": ["user"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "NO CONTENT, no user available"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add user",
+        "tags": ["user"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definations/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "schema": {
+              "$ref": "#/definations/User"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST, username already available",
+            "schema": {
+              "$ref": "#/definations/User"
+            }
+          }
+        }
+      }
+    },
+    "/users/{username}": {
+      "get": {
+        "summary": "Get user by username",
+        "tags": ["user"],
+        "parameters": [{
+          "name": "username",
+          "in": "path",
+          "description": "username of the user",
+          "required": true,
+          "type": "String"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definations/User"
+            }
+          },
+          "204": {
+            "description": "NOT CONTENT, user not available",
+            "schema": {
+              "$ref": "#/definations/User"
+            }
+          }
+        }
+      }
+    },
+    "/books/": {
+      "get": {
+        "summary": "Get book list",
+        "tags": ["book"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "NO CONTENT, books are not available"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add book",
+        "tags": ["book"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definations/Book_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "schema": {
+              "$ref": "#/definations/Book"
+            }
+          }
+        }
+      }
+    },
+    "/books/{book_id}": {
+      "get": {
+        "summary": "Get book by book_id",
+        "tags": ["book"],
+        "parameters": [{
+          "name": "book_id",
+          "in": "path",
+          "description": "book id of book",
+          "required": true,
+          "type": "integer"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definations/Book"
+            }
+          },
+          "204": {
+            "description": "NOT CONTENT, book is not available",
+            "schema": {
+              "$ref": "#/definations/Book"
+            }
+          }
+        }
+      }
+    },
+
+    "/library/users/": {
+      "get": {
+        "summary": "Get user list",
+        "tags": ["library"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "NO CONTENT, no user available"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add user",
+        "tags": ["library"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definations/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "schema": {
+              "$ref": "#/definations/User"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST, username already available",
+            "schema": {
+              "$ref": "#/definations/User"
+            }
+          }
+        }
+      }
+    },
+    "/library/users/{username}": {
+      "get": {
+        "summary": "Get user and book association",
+        "tags": ["library"],
+        "parameters": [{
+          "name": "username",
+          "in": "path",
+          "description": "username of the user",
+          "required": true,
+          "type": "String"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definations/User_book"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST, user as no book",
+            "schema": {
+              "$ref": "#/definations/User"
+            }
+          }
+        }
+      }
+    },
+    "/library/books/": {
+      "get": {
+        "summary": "Get book list",
+        "tags": ["library"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "NO CONTENT, books are not available"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add book",
+        "tags": ["library"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definations/Book_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "schema": {
+              "$ref": "#/definations/Book"
+            }
+          }
+        }
+      }
+    },
+    "/library/books/{book_id}": {
+      "get": {
+        "summary": "Get book by book_id",
+        "tags": ["library"],
+        "parameters": [{
+          "name": "book_id",
+          "in": "path",
+          "description": "book id of book",
+          "required": true,
+          "type": "integer"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definations/Book"
+            }
+          },
+          "204": {
+            "description": "NOT CONTENT, book is not available",
+            "schema": {
+              "$ref": "#/definations/Book"
+            }
+          }
+        }
+      }
+    },
+    "/library/users/{username}/books/{book_id}": {
+      "post": {
+        "summary": "Add book",
+        "tags": ["library"],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "username of the user",
+            "required": true,
+            "type": "String"
+          },
+          {
+            "name": "book_id",
+            "in": "path",
+            "description": "book id of book",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "schema": {
+              "$ref": "#/definations/Library"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST, User or Book is not available"
+          }
+        }
+      }
+    }
+  }
+}
